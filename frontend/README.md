@@ -1,105 +1,118 @@
-## Setting up the Presentation Tier
 
-# conncet to your  front end instance
-#### Install GIT
-```
-sudo yum update -y
+This project is full-stack web application implementation using fronted ->backend->MySQL
+this is a 3-tier application which contain 3 layers . where presentation layer (React js ), application logic layer (express js) and data layer (MYSQL) these are separated into tiers
 
-sudo yum install git -y
+* we are using the aws CLI
 
-git — version
-```
 
-#### Install node.js
-1. To install node version manager (nvm)
-```
-sudo dnf install -y nodejs
-```
-### Install httpd (apache)
-```
+#Data layer
+ 
+create the rds in the same vpc
+
+
+#applicaion layer
+
+connect to the backend server or instance
+
+
+install git
+command : " yum install git "
+
+clone repository
+command : "git clone
+
+
+install the mariadb or mysql for intalized the database
+command : "sudo yum install mariadb105-server -y"
+
+install node js
+command : "sudo dnf install -y nodejs"
+
+install npm
+command "npm install"
+
+install pm2 (process manager of node js)
+command : " npm install -g pm2"
+
+
+go to backend directory
+cd 3-tier-Author-book\
+cd backen
+
+change the database details in db.js
+*** vi configs/db.js***
+const mysql = require('mysql2');
+
+const db = mysql.createConnection({
+   host: 'rds endpoint',
+   port: '3306',
+   user: 'admin',
+   password: 'cloud123',
+   database: 'react_node_app'
+});
+
+module.exports = db;
+
+
+Initilize the database
+command "mysql -h <rdsendpoint> -u admin -p<cloud123> < db.sql"
+
+
+run the following command for backend execution
+
+pm2 start server.js --name "Divyansh"
+pm2 startup
+sudo systemctl enable pm2-root
+sudo pm2 save
+
+
+
+# Presentation layer
+ 
+connect to the frontend server or instance
+
+
+install git
+command : " yum install git "
+
+clone repository
+command : "git clone
+
+install node js
+command: "sudo dnf install -y nodejs"
+
+install nginx
 sudo yum install nginx -y
-sudo systemctl start nginx
-sudo systemctl enable nginx
-```
-#### Clone repository
-```
-git clone https://github.com/CloudTechDevOps/fullstack-autors-books-application.git
-```
-###Switch to frontend
-```
-cd fullstack-authors-books-application
+
+start and enable nginx
+command : "sudo systemctl start nginx && sudo systemctl enable nginx"
+
+go to frontend
+cd 3-tier-Author-book\
 cd frontend
-```
-### In frontend path .env file is there if not existis please create .env file 
-```
-VITE_API_URL=http://3.85.56.86/api   // for public deploymnet changee this ip accoording to your backned
-VITE_API_URL= "/api"      // for proxy use this one
-```
-#### Run the following commnads in frontend 
-```
+
+In frontend path .env file is there if not existis please create .env file
+VITE_API_URL=http://3.85.56.86/api   //  use backend ip
+VITE_API_URL= "/api"
+
+
+
+Run the following commnads in frontend
 npm install
 npm run build
 sudo cp -r dist/* /usr/share/nginx/html
-```
-
-# revrse proxy
-
-### if you want to use internnal loadbalncer please go through below procress
-# Reverse Proxy & Backend Setup (Amazon Linux)
-
-This repository contains an Nginx reverse-proxy configuration that serves a React frontend and proxies API requests to a backend at private IP or loadbalancer.
-
-## Behavior summary (from `proxy.conf`)
-- Listens on port 80.
-- Routes requests starting with `/api/` to private ip or loadbalncer`.
-- Serves a React single-page app from `/usr/share/nginx/html` and falls back to `index.html` for client routes.
 
 
-## Install Nginx on Amazon Linux 2
-Run the following on the public-facing EC2 (nginx) instance.
-
-### After cloneing your your config.js file url must be /api only
-once chek in your config  .env  file below one 
-```
-VITE_API_URL  = "/api";  // For reverse proxy it is mandatory so dont change
 
 
-### create a proxy file and paste the file from git and chage the backend private ip if you are using internal loadbalncer change it 
-```bash
-sudo vi /etc/nginx/conf.d/reverse-proxy.conf
-```
-### paste below file and change loadbalancer url
-```
-server {
-    listen 80;
-    server_name _;
 
-    # 🔥  API reverse proxy (WITH PATH FIX)
-    location ^~ /api/ {
-        proxy_pass http://backend-loadbalncer-url;
-        proxy_http_version 1.1;
+test backend
+curl  backend_ip
 
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
+test frontend
+curl frontend ip
+curl backend ip
 
-    # React build
-    root /usr/share/nginx/html;
-    index index.html;
 
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-}
-```
-# Verify
-2. Test and reload nginx:
-
-```bash
-sudo nginx -t
-sudo systemctl reload nginx
-```
-### Now access the frontend with public ip 
-### hit public ip you will get this responce 
+Now you can access the fronted with public_ip
+hit ip in your browser you get response
