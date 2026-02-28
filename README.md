@@ -4,7 +4,6 @@ this is a 3-tier application which contain 3 layers . where presentation layer (
 
 * we are using the aws CLI
 
-
 # Data layer
  
 create the rds in the same vpc
