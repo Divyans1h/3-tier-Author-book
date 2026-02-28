@@ -6,9 +6,9 @@ we are using the aws CLI
 Application layer
 connect to the backend server or instance
 
-install git command : " yum install git "
+install git command : " yum install git  "
 
-clone repository command : "git clone
+clone repository command : "git clone "https://github.com/Divyans1h/3-tier-Author-book.git"  "
 
 install the mariadb or mysql for intalized the database command : "sudo yum install mariadb105-server -y"
 
